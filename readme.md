@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Build
         id: build
-        uses: sultann/action-wp-build@master
+        uses: sultann/action-wp-build-deploy@master
         with:
           wp_deploy: true
           wp_username: ${{ secrets.WP_USERNAME }}
