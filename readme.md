@@ -7,7 +7,25 @@ Additionally, it will let you deploy the built theme or plugin to wordpress.org.
 # Example
 To get started, you will want to copy the contents of one of these examples into `.github/workflows/deploy.yml` and push that to your repository. You are welcome to name the file something else, but it must be in that directory. The usage of `ubuntu-latest` is recommended for compatibility with required dependencies in this Action.
 
-### Deploy on pushing a new tag
+### Just build the project and add steps as per your needs.
+```yaml
+name: Build project
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    name: Build rproject
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build project
+        uses: sultann/action-wp-build-deploy@master
+```
+
+### Deploy on pushing a new tag.
 ```yaml
 name: Build release and deploy
 on:
@@ -30,7 +48,7 @@ jobs:
           wp_url: 'https://plugins.svn.wordpress.org' # Remove this if its plugin
           wp_slug: 'my-plugin-slug' # Remove this if GitHub repo name matches SVN slug
 ```
-### Deploy on publishing a new release and attach a ZIP file to the release
+### Deploy on publishing a new release and attach a ZIP file to the release.
 
 ```yaml
 name: Build release and deploy
