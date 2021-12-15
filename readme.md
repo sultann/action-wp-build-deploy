@@ -1,11 +1,11 @@
 # WP Build Deploy
-A GitHub Action to build WordPress theme or plugin using Composer and NPM then deploying to wordpress.org.
+A GitHub Actions workflow that builds and deploys WordPress projects. As well as creates a zip file of the project.
 
-Out of the box with zero-configuration, the theme or plugin will be built using the composer.json and package.json from the project root.
-Additionally, it will let you deploy the built theme or plugin to wordpress.org. Last but not least, you can create a zip file using the built project.
+This action builds the project using composer.json and package.json from the project root with zero configuration. You can also deploy the build to wordpress.org repository setting the required arguments.
+The action can be used for both theme and plugin. Additionally, you can create a zip file using the built project.
 
 # Example
-To get started, you will want to copy the contents of one of these examples into `.github/workflows/deploy.yml` and push that to your repository. You are welcome to name the file something else, but it must be in that directory. The usage of `ubuntu-latest` is recommended for compatibility with required dependencies in this Action.
+To get started, you will have to copy the contents of one of these examples into `.github/workflows/deploy.yml` and push that to your repository. The usage of `ubuntu-latest` is recommended for compatibility with required dependencies in this Action.
 
 ### Just build the project and add steps as per your needs.
 ```yaml
