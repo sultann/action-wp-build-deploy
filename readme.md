@@ -4,7 +4,7 @@ A GitHub Action to build WordPress theme or plugin using Composer and NPM then d
 Out of the box with zero-configuration, the theme or plugin will be built using the composer.json and package.json from the project root.
 Additionally, it will let you deploy the built theme or plugin to wordpress.org. Last but not least, you can create a zip file using the built project.
 
-#Example
+# Example
 To get started, you will want to copy the contents of one of these examples into `.github/workflows/deploy.yml` and push that to your repository. You are welcome to name the file something else, but it must be in that directory. The usage of `ubuntu-latest` is recommended for compatibility with required dependencies in this Action.
 
 ### Deploy on pushing a new tag
