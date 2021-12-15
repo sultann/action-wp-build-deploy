@@ -1,4 +1,4 @@
-name: 'WP Build'
+name: 'WP Build Deploy'
 author: Sultan Nasir Uddin
 description: 'Build WordPress Theme and Plugin from GitHub Actions'
 branding:
