@@ -1,0 +1,80 @@
+name: 'WP Build'
+author: Sultan Nasir Uddin
+description: 'Build WordPress Theme and Plugin from GitHub Actions'
+branding:
+  icon: 'upload-cloud'
+  color: 'blue'
+inputs:
+  generate_zip:
+    required: false
+    description: 'Generate package zip file?'
+  zip_name:
+    required: false
+    description: 'Zip file name'
+  wp_deploy:
+    required: false
+    description: 'Should we deploy to WP?'
+  wp_url:
+    required: false
+    description: 'WP URL'
+    default: 'https://plugins.svn.wordpress.org'
+  wp_slug:
+    required: false
+    description: 'WP slug'
+  wp_username:
+    required: false
+    description: 'WP username'
+  wp_password:
+    required: false
+    description: 'WP password'
+  dry_run:
+    required: false
+    description: 'Deploy dryrun?'
+    default: 'false'
+  version:
+    required: false
+    description: 'Version'
+  assets_dir:
+    required: false
+    description: 'Assets directory'
+    default: '.wordpress-org'
+outputs:
+  path:
+    description: 'Build path'
+    value: ${{ steps.deploy.outputs.path }}
+  zip_name:
+    description: 'Zip file name'
+    value: ${{ steps.deploy.outputs.zip_name }}
+  zip_path:
+    description: 'Zip file path'
+    value: ${{ steps.deploy.outputs.zip_path }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Environment
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+        coverage: none
+        tools: composer
+    - name: Tool versions
+      shell: bash
+      run: |
+        php --version
+        composer --version
+        node --version
+    - id: deploy
+      env:
+        GENERATE_ZIP: ${{ inputs.generate_zip }}
+        ZIP_NAME: ${{ inputs.zip_name }}
+        WP_DEPLOY: ${{ inputs.wp_deploy }}
+        WP_URL: ${{ inputs.wp_url }}
+        WP_SLUG: ${{ inputs.wp_slug }}
+        WP_USERNAME: ${{ inputs.wp_username }}
+        WP_PASSWORD: ${{ inputs.wp_password }}
+        DRY_RUN: ${{ inputs.dry_run }}
+        VERSION: ${{ inputs.version }}
+        ASSETS_DIR: ${{ inputs.assets_dir }}
+      run: ${{ github.action_path }}/run.sh
+      shell: bash
+
