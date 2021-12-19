@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -eo
-#set -x # echo on
+set -x # echo on
 
 # Set variables
 BUILD_PATH="${HOME}/wp-build"
