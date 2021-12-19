@@ -6,6 +6,7 @@ set -x # echo on
 # Set variables
 BUILD_PATH="${HOME}/wp-build"
 mkdir -p "$BUILD_PATH"
+echo $WP_DEPLOY
 echo "::set-output name=path::${BUILD_PATH}"
 
 copy_files() {
