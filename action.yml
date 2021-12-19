@@ -14,6 +14,7 @@ inputs:
   wp_deploy:
     required: false
     description: 'Should we deploy to WP?'
+    default: false
   wp_url:
     required: false
     description: 'WP URL'
