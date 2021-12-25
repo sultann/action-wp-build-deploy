@@ -96,11 +96,6 @@ Default: false
 
 Whatever to generate zip file or not?
 
-### `zip_name`
-Default: Repository name
-
-By default, the zip file name will be the repository name. You can change it by passing a custom name.
-
 ### `wp_deploy`
 Default: false
 
@@ -144,9 +139,6 @@ Path to the built project.
 
 ### `zip_path`
 Path to the built zip file.
-
-### `zip_name`
-Name of the built zip file.
 
 # Excluding files from deployment
 

@@ -8,9 +8,6 @@ inputs:
   generate_zip:
     required: false
     description: 'Generate package zip file?'
-  zip_name:
-    required: false
-    description: 'Zip file name'
   wp_deploy:
     required: false
     description: 'Should we deploy to WP?'
@@ -43,9 +40,6 @@ outputs:
   path:
     description: 'Build path'
     value: ${{ steps.deploy.outputs.path }}
-  zip_name:
-    description: 'Zip file name'
-    value: ${{ steps.deploy.outputs.zip_name }}
   zip_path:
     description: 'Zip file path'
     value: ${{ steps.deploy.outputs.zip_path }}

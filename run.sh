@@ -123,20 +123,8 @@ if [[ "$GENERATE_ZIP" = true ]]; then
   echo "➤ Generating zip file..."
 
   # If zip name not specified, use the repository name.
-  if [[ -z "$ZIP_NAME" ]]; then
+  if [[ -z "$WP_SLUG" ]]; then
   	ZIP_NAME=${GITHUB_REPOSITORY#*/}
-  	echo "ℹ︎ No zip name specified, defaulting to repository name."
-
-    if [[ -z "$VERSION" ]]; then
-      echo "ℹ︎ No version set defaulting to git tag..."
-      VERSION=`echo ${GITHUB_REF#refs/tags/} | sed -e 's/[^0-9.]*//g'`
-      echo "ℹ︎ Version: ${VERSION}"
-    fi
-
-  	if [[ -n "$VERSION" ]]; then
-      ZIP_NAME="${ZIP_NAME}-v${VERSION}";
-    fi
-
   fi
 
 
@@ -157,6 +145,5 @@ if [[ "$GENERATE_ZIP" = true ]]; then
 
   zip -r "${GITHUB_WORKSPACE}/${ZIP_NAME}.zip" .
   echo "::set-output name=zip_path::${GITHUB_WORKSPACE}/${ZIP_NAME}.zip"
-  echo "::set-output name=zip_name::${ZIP_NAME}"
   echo "✓ Zip file generated!"
 fi
