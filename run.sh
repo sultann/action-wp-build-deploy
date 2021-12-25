@@ -38,7 +38,7 @@ if [[ -r "${GITHUB_WORKSPACE}/composer.json" ]]; then
   echo "✓ Composer dependencies installed!"
 fi
 
-
+# If deploy is true, deploy to wordpress.org.
 if [[ "$WP_DEPLOY" = true ]]; then
   echo "➤ Deploying to WP..."
 
@@ -126,6 +126,12 @@ if [[ "$GENERATE_ZIP" = true ]]; then
   if [[ -z "$ZIP_NAME" ]]; then
   	ZIP_NAME=${GITHUB_REPOSITORY#*/}
   	echo "ℹ︎ No zip name specified, defaulting to repository name."
+
+    if [[ -z "$VERSION" ]]; then
+      echo "ℹ︎ No version set defaulting to git tag..."
+      VERSION=`echo ${GITHUB_REF#refs/tags/} | sed -e 's/[^0-9.]*//g'`
+      echo "ℹ︎ Version: ${VERSION}"
+    fi
 
   	if [[ -n "$VERSION" ]]; then
       ZIP_NAME="${ZIP_NAME}-v${VERSION}";
