@@ -39,10 +39,10 @@ if [[ -r "${GITHUB_WORKSPACE}/composer.json" ]]; then
 fi
 
 
-if [["$WP_DEPLOY" = true ]]; then
+if [[ "$WP_DEPLOY" = true ]]; then
   echo "➤ Deploying to WP..."
 
-  if [["$DRY_RUN" =  true ]]; then
+  if [[ "$DRY_RUN" =  true ]]; then
     echo "ℹ︎ DRY RUN ..."
   fi
 
@@ -110,7 +110,7 @@ if [["$WP_DEPLOY" = true ]]; then
 
   svn status
 
-  if [["$DRY_RUN" !=  true ]]; then
+  if [[ "$DRY_RUN" !=  true ]]; then
     echo "➤ Committing files..."
     svn commit -m "Update to version $VERSION from GitHub" --no-auth-cache --non-interactive  --username "$WP_USERNAME" --password "$WP_PASSWORD"
   fi
@@ -119,7 +119,7 @@ if [["$WP_DEPLOY" = true ]]; then
 fi
 
 
-if [["$GENERATE_ZIP" = true ]]; then
+if [[ "$GENERATE_ZIP" = true ]]; then
   echo "➤ Generating zip file..."
 
   # If zip name not specified, use the repository name.
