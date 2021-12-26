@@ -1,12 +1,19 @@
 #!/bin/bash
 
 set -eo
-set -x # echo on
 
-# Set variables
-BUILD_PATH="${HOME}/wp-build"
-mkdir -p "$BUILD_PATH"
-echo "::set-output name=path::${BUILD_PATH}"
+#set -x # echo on
+# Set options based on user input
+WP_SLUG=$( [ -n "$WP_SLUG" ] && echo "$WP_SLUG" || echo ${GITHUB_REPOSITORY#*/} )
+ASSETS_DIR=$( [ -n "$ASSETS_DIR" ] && echo "$ASSETS_DIR" || echo '.wordpress-org' )
+VERSION=$( [ -n "$VERSION" ] && echo "$VERSION" || echo ${GITHUB_REF#refs/tags/} | sed -e 's/[^0-9.]*//g' )
+WP_DEPLOY=$( [ "$WP_DEPLOY" = true ] && echo true || echo false )
+DRY_RUN=$( [ "$DRY_RUN" = true ] && echo true || echo false )
+GENERATE_ZIP=$( [ "$GENERATE_ZIP" = true ] && echo true || echo false )
+ZIP_NAME=$( [ -n "$ZIP_NAME" ] && echo "$ZIP_NAME" || echo "${WP_SLUG}" )
+WP_URL=$( [ -n "$WP_URL" ] && echo "$WP_URL" || echo 'https://plugins.svn.wordpress.org' )
+BUILD_DIRECTORY="${HOME}/build"
+ZIP_DIRECTORY="${HOME}/${ZIP_NAME}"
 
 copy_files() {
   echo "➤ Copying files..."
@@ -38,6 +45,7 @@ if [[ -r "${GITHUB_WORKSPACE}/composer.json" ]]; then
   echo "✓ Composer dependencies installed!"
 fi
 
+
 # If deploy is true, deploy to wordpress.org.
 if [[ "$WP_DEPLOY" = true ]]; then
   echo "➤ Deploying to WP..."
@@ -56,21 +64,16 @@ if [[ "$WP_DEPLOY" = true ]]; then
       exit 0
   fi
 
-  if [[ -z "$WP_SLUG" ]]; then
-      echo "ℹ︎ WP slug is not set defaulting to repository name..."
-      WP_SLUG=${GITHUB_REPOSITORY#*/}
-  fi
-
   WP_FULL_URL="${WP_URL}/${WP_SLUG}"
   echo "ℹ︎ WP URL: $WP_FULL_URL"
 
   echo "➤ Checking out .org repository..."
-  svn checkout --depth immediates "$WP_FULL_URL" "$BUILD_PATH"
-  cd "$BUILD_PATH" || exit 0
+  svn checkout --depth immediates "$WP_FULL_URL" "$BUILD_DIR"
+  cd "$BUILD_DIR" || exit 0
   svn update --set-depth infinity assets
   svn update --set-depth infinity trunk
 
-  copy_files "${BUILD_PATH}/trunk"
+  copy_files "${BUILD_DIR}/trunk"
 
   # Add everything and commit to SVN
   # The force flag ensures we recurse into subdirectories even if they are already added
@@ -82,14 +85,8 @@ if [[ "$WP_DEPLOY" = true ]]; then
   # Also suppress stdout here
   svn status | grep '^\!' | sed 's/! *//' | xargs -I% svn rm %@ > /dev/null
 
-  # Does it even make sense for VERSION to be editable in a workflow definition?
-  if [[ -z "$VERSION" ]]; then
-  	echo "ℹ︎ No version set defaulting to git tag..."
-  	VERSION=`echo ${GITHUB_REF#refs/tags/} | sed -e 's/[^0-9.]*//g'`
-  	echo "ℹ︎ Version: ${VERSION}"
-  fi
-
   if [[ -n "$VERSION" ]]; then
+    echo "ℹ︎ Version: ${VERSION}"
     # Copy tag locally to make this a single commit
     echo "➤ Copying tag $VERSION..."
     svn cp "trunk" "tags/$VERSION"
@@ -121,29 +118,23 @@ fi
 
 if [[ "$GENERATE_ZIP" = true ]]; then
   echo "➤ Generating zip file..."
-
-  # If zip name not specified, use the repository name.
-  if [[ -z "$WP_SLUG" ]]; then
-  	ZIP_NAME=${GITHUB_REPOSITORY#*/}
-  fi
-
-
   echo "ℹ︎ Zip name is  $ZIP_NAME"
 
-  if [ -z "$(ls -A $BUILD_PATH)" ]; then
+  if [ -z "$(ls -A $BUILD_DIRECTORY)" ]; then
     echo "ℹ︎ No files in the build directory."
-    copy_files $BUILD_PATH
+    copy_files $BUILD_DIRECTORY
   fi
 
-  if [[ -d "$BUILD_PATH/trunk/" ]]; then
-    cd "$BUILD_PATH/trunk" || exit 0
+  if [[ -d "$BUILD_DIRECTORY/trunk/" ]]; then
     echo "ℹ︎ Zipping files from trunk."
+    rsync -rc "$BUILD_DIRECTORY/trunk/" "$ZIP_DIRECTORY/" --delete --delete-excluded
   else
-    cd "$BUILD_PATH" || exit 0
     echo "ℹ︎ Zipping files from build directory."
+    rsync -rc "$BUILD_DIRECTORY/" "$ZIP_DIRECTORY/" --delete --delete-excluded
   fi
 
-  zip -r "${GITHUB_WORKSPACE}/${ZIP_NAME}.zip" .
+  cd "$HOME" || exit 0
+  zip -r "${GITHUB_WORKSPACE}/${ZIP_NAME}.zip" "$ZIP_NAME"
   echo "::set-output name=zip_path::${GITHUB_WORKSPACE}/${ZIP_NAME}.zip"
   echo "✓ Zip file generated!"
 fi
