@@ -68,12 +68,12 @@ if [[ "$WP_DEPLOY" = true ]]; then
   echo "ℹ︎ WP URL: $WP_FULL_URL"
 
   echo "➤ Checking out .org repository..."
-  svn checkout --depth immediates "$WP_FULL_URL" "$BUILD_DIR"
-  cd "$BUILD_DIR" || exit 0
+  svn checkout --depth immediates "$WP_FULL_URL" "$BUILD_DIRECTORY"
+  cd "$BUILD_DIRECTORY" || exit 0
   svn update --set-depth infinity assets
   svn update --set-depth infinity trunk
 
-  copy_files "${BUILD_DIR}/trunk"
+  copy_files "${BUILD_DIRECTORY}/trunk"
 
   # Add everything and commit to SVN
   # The force flag ensures we recurse into subdirectories even if they are already added
