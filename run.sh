@@ -7,6 +7,8 @@ set -eo
 WP_SLUG=$( [ -n "$WP_SLUG" ] && echo "$WP_SLUG" || echo ${GITHUB_REPOSITORY#*/} )
 ASSETS_DIR=$( [ -n "$ASSETS_DIR" ] && echo "$ASSETS_DIR" || echo '.wordpress-org' )
 VERSION=$( [ -n "$VERSION" ] && echo "$VERSION" || echo ${GITHUB_REF#refs/tags/} | sed -e 's/[^0-9.]*//g' )
+ASSETS_BUILD=$( [ "$ASSETS_BUILD" = false ] && echo false || echo true )
+COMPOSER_BUILD=$( [ "$COMPOSER_BUILD" = false ] && echo false || echo true )
 WP_DEPLOY=$( [ "$WP_DEPLOY" = true ] && echo true || echo false )
 DRY_RUN=$( [ "$DRY_RUN" = true ] && echo true || echo false )
 GENERATE_ZIP=$( [ "$GENERATE_ZIP" = true ] && echo true || echo false )
@@ -31,7 +33,7 @@ copy_files() {
 
 
 # If package file is exist install composer dependencies.
-if [[ -r "${GITHUB_WORKSPACE}/package.json" ]]; then
+if [[ -r "${GITHUB_WORKSPACE}/package.json" ]] && [[ "$ASSETS_BUILD" = true ]]; then
    echo "➤ Installing package dependencies..."
    npm install
    npm run build
@@ -39,7 +41,7 @@ if [[ -r "${GITHUB_WORKSPACE}/package.json" ]]; then
 fi
 
 # If composer file is exist install composer dependencies.
-if [[ -r "${GITHUB_WORKSPACE}/composer.json" ]]; then
+if [[ -r "${GITHUB_WORKSPACE}/composer.json" ]] && [[ "$COMPOSER_BUILD" = true ]]; then
   echo "➤ Installing composer dependencies..."
   composer install --no-dev || exit "$?"
   echo "✓ Composer dependencies installed!"

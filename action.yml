@@ -9,6 +9,12 @@ inputs:
     description: 'PHP version to use'
     required: false
     default: '7.1'
+  assets_build:
+    required: false
+    description: 'Build assets?'
+  composer_build:
+    required: false
+    description: 'Build composer?'
   generate_zip:
     required: false
     description: 'Generate package zip file?'
@@ -66,6 +72,8 @@ runs:
     - id: deploy
       run: ${{ github.action_path }}/run.sh
       env:
+        ASSETS_BUILD: ${{ inputs.assets_build }}
+        COMPOSER_BUILD: ${{ inputs.composer_build }}
         GENERATE_ZIP: ${{ inputs.generate_zip }}
         ZIP_NAME: ${{ inputs.zip_name }}
         WP_DEPLOY: ${{ inputs.wp_deploy }}
