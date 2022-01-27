@@ -52,6 +52,12 @@ outputs:
   zip_path:
     description: 'Zip file path'
     value: ${{ steps.deploy.outputs.zip_path }}
+  zip_name:
+    description: 'Zip file name'
+    value: ${{ steps.deploy.outputs.zip_name }}
+  version:
+    description: 'Release version'
+    value: ${{ steps.deploy.outputs.version }}
 runs:
   using: 'composite'
   steps:
