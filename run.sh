@@ -138,5 +138,7 @@ if [[ "$GENERATE_ZIP" = true ]]; then
   cd "$HOME" || exit 0
   zip -r "${GITHUB_WORKSPACE}/${ZIP_NAME}.zip" "$ZIP_NAME"
   echo "::set-output name=zip_path::${GITHUB_WORKSPACE}/${ZIP_NAME}.zip"
+  echo "::set-output name=zip_name::${ZIP_NAME}"
+  echo "::set-output name=version::${VERSION}"
   echo "✓ Zip file generated!"
 fi
