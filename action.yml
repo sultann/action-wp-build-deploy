@@ -90,7 +90,7 @@ runs:
         VERSION: ${{ inputs.version }}
         ASSETS_DIR: ${{ inputs.assets_dir }}
       shell: bash
-
-    - run: env
-      shell: bash
+#
+#    - run: env
+#      shell: bash
 
